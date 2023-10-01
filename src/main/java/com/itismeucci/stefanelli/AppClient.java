@@ -8,6 +8,7 @@ import java.util.Scanner;
  */
 public class AppClient {
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
         Client client = new Client();
 
@@ -24,56 +25,10 @@ public class AppClient {
         System.out.println(client.receive());
         client.send("Connessione riuscita");
 
-        Thread receive = new ReceivingThread(client);
-        receive.run();
+        client.send("questo in uppercase");
 
-        String input = "";
+        System.out.println(client.receive());
 
-        while (true) {
-
-            input = scanner.nextLine();
-
-            System.out.println("\t a " + input.toUpperCase());
-
-            if (input != "/exit")
-                client.send(input);
-            else
-                break;
-        }
-
-        receive.interrupt();
         scanner.close();
-    }
-
-    private static class ReceivingThread extends Thread {
-
-        protected Client client;
-
-        public ReceivingThread(Client client) {
-
-            this.client = client;
-        }
-
-        @Override
-        public void run() {
-
-            String in;
-
-            while (true) {
-
-                in = client.receive();
-                if (in != null)
-                    System.out.println(in);
-
-                try {
-
-                    wait(5);
-
-                } catch (InterruptedException e) {
-
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }
